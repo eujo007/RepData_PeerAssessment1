@@ -20,6 +20,7 @@ library(dplyr)
 ##     intersect, setdiff, setequal, union
 ```
 
+
 ```r
 library(ggplot2)
 ```
@@ -28,12 +29,14 @@ library(ggplot2)
 ## Warning: package 'ggplot2' was built under R version 3.1.3
 ```
 
+
 ```r
 rawData <- read.csv("activity.csv",header=TRUE, colClasses=c("integer","Date","integer"))
 ## activityWithoutNAs <- filter(rawData, !is.na(steps))
 ```
 
-## What is mean total number of steps taken per day
+
+## What is mean total number of steps taken per day?
 
 
 ```r
@@ -44,7 +47,8 @@ totalStepsPerDay <- summarize(dplyr::group_by(activityWithoutNAs,date), TotalSte
 hist(totalStepsPerDay$TotalSteps,xlab = "Total Steps Per Day" )
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
 
 ```r
 dailyTotals <- totalStepsPerDay$TotalSteps
@@ -56,6 +60,7 @@ mean(dailyTotals)
 ## [1] 10766.19
 ```
 
+
 ```r
 median(dailyTotals)
 ```
@@ -63,6 +68,7 @@ median(dailyTotals)
 ```
 ## [1] 10765
 ```
+
 ## What is the average daily activity pattern?
 
 ```r
@@ -71,15 +77,25 @@ averageStepsByInterval <- summarize(group_by(activityWithoutNAs,interval), AvgSt
 plot(averageStepsByInterval$interval,averageStepsByInterval$AvgSteps, type="l")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+
 
 ```r
-InervalWithMaxAvgSteps = arrange(averageStepsByInterval, desc(AvgSteps))[1,1]
+IntervalWithMaxAvgSteps = arrange(averageStepsByInterval, desc(AvgSteps))[1,1]
+print(IntervalWithMaxAvgSteps)
+```
+
+```
+## Source: local data frame [1 x 1]
+## 
+##   interval
+## 1      835
 ```
 
 
 ## Imputing missing values
 ## I will use the average steps for the 5 minute interval to fill NAs
+
 
 ```r
 TotalNAValues = sum(is.na(rawData$steps))
@@ -99,7 +115,8 @@ totalStepsPerDay2 <- summarize(group_by(rawData2,date), TotalStepsPerDay= sum(st
 hist(totalStepsPerDay2$TotalStepsPerDay)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+
 
 ```r
 mean(totalStepsPerDay2$TotalStepsPerDay)
@@ -109,6 +126,7 @@ mean(totalStepsPerDay2$TotalStepsPerDay)
 ## [1] 10766.19
 ```
 
+
 ```r
 median(totalStepsPerDay2$TotalStepsPerDay)
 ```
@@ -116,6 +134,8 @@ median(totalStepsPerDay2$TotalStepsPerDay)
 ```
 ## [1] 10766.19
 ```
+
+
 ## Are there differences in activity patterns between weekdays and weekends?
 
 ```r
@@ -126,4 +146,4 @@ averageStepsByInterval2 <- summarize(group_by(rawData2,interval,WeekDayType), Av
 ggplot(averageStepsByInterval2, aes(interval,AvgSteps)) + geom_line() +  facet_grid(WeekDayType~.)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-12-1.png) 
